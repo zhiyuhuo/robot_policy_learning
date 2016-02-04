@@ -2,15 +2,15 @@ clc;
 clear;
 close all;
 %
-for n = 1:10
+for n = 31:31
     
 %n = ;
-taskdirset = ls(sprintf('Human Demo Rec 2/%d/', n));
+taskdirset = dir(sprintf('Human_Demo_Rec_2/%d/', n));
 for T = 3:size(taskdirset, 1)
-    timedir = taskdirset(T,:);
-    flcmd = sprintf('Human Demo Rec 2/%d/%s/cmd - %d.out', n, timedir, n);
-    flfr = sprintf('Human Demo Rec 2/%d/%s/fr - %d.out', n, timedir, n);
-    flpose = sprintf('Human Demo Rec 2/%d/%s/pose - %d.out', n, timedir, n);
+    timedir = taskdirset(T).name;
+    flcmd = sprintf('Human_Demo_Rec_2/%d/%s/cmd - %d.out', n, timedir, n);
+    flfr = sprintf('Human_Demo_Rec_2/%d/%s/fr - %d.out', n, timedir, n);
+    flpose = sprintf('Human_Demo_Rec_2/%d/%s/pose - %d.out', n, timedir, n);
 
     bagset = {};
     
@@ -35,7 +35,13 @@ for T = 3:size(taskdirset, 1)
     fid = fopen(flfr);
     tline = fgets(fid);
     while ischar(tline)
-        frlist = read_num_from_txtline(tline);
+        frlist = str2num(tline);
+        if isempty(find(frlist == 201))
+            frlist(end+1) = 201;
+        end
+        if isempty(find(frlist == 202))
+            frlist(end+1) = 202;
+        end
         frbuck{end+1} = frlist;
         disp(tline)
         tline = fgets(fid);

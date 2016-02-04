@@ -6,8 +6,9 @@ close all;
 cmdtrialdataset = load('cmd_trial_dataset.mat');
 cmdtrialdataset = cmdtrialdataset.cmdtrialdataset;
 
-CMDn = {'non', 'non', 'couch', 'front', 'table'};
+CMDn = {'livingroom', 'non', 'non', 'non', 'non'};
 CMD = [CMDn{1} '_' CMDn{2} '_' CMDn{3} '_' CMDn{4} '_' CMDn{5}];
+CMDID = 0;
 for i = 1:length(cmdtrialdataset)
     disp(cmdtrialdataset{i}{1});
     if strcmp(cmdtrialdataset{i}{1}, CMD) == 1
@@ -70,20 +71,14 @@ end
 keyvalues = keys(nodes);
 for j = 1:length(keyvalues)
     nd = nodes(keyvalues{j});
-    if (max(feature.outdirw) > 0 && length(feature.outdirw) > 1)
-        nd.outdirw = feature.outdirw / max(feature.outdirw);
-    else
-        nd.outdirw = feature.outdirw;
+    if (max(nd.outdirw) > 0 && length(nd.outdirw) > 1)
+        nd.outdirw = nd.outdirw / max(nd.outdirw);
     end
-    if (max(feature.indirw) > 0 && length(feature.indirw) > 1)
-        nd.indirw = feature.indirw / max(feature.indirw);
-    else
-        nd.indirw = feature.indirw;
+    if (max(nd.indirw) > 0 && length(nd.indirw) > 1)
+        nd.indirw = nd.indirw / max(nd.indirw);
     end                   
-    if (max(feature.distw) > 0 && length(feature.distw) > 1)
-        nd.distw = feature.distw / max(feature.distw);
-    else
-        nd.distw = feature.distw;
+    if (max(nd.distw) > 0 && length(nd.distw) > 1)
+        nd.distw = nd.distw / max(nd.distw);
     end   
     nodes(keyvalues{j}) = nd;
 end
