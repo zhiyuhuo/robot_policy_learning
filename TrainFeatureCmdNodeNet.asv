@@ -1,0 +1,81 @@
+clc;
+clear;
+close all;
+%
+
+cmdtrialdataset = load('cmd_trial_dataset.mat');
+cmdtrialdataset = cmdtrialdataset.cmdtrialdataset;
+cmdfeaturesnameset = {};
+for i = 1:length(cmdtrialdataset)
+    cmdstr = cmdtrialdataset{i}{1};
+    cmdtrialdata = cmdtrialdataset{i}{2};
+    nameset = {};
+    for j = 1:length(cmdtrialdata)
+        featureset = cmdtrialdata{j};
+        features = featureset{1};
+        lb = featureset{2};
+        for k = 1:length(features)
+            feature = features{k};
+            name = [feature.nameA '_' feature.nameB];
+            nameset{end+1} = name;
+        end
+    end
+    
+    nameset = unique(nameset);
+    cmdfeaturesnameset{end+1} = {cmdstr, nameset};
+end
+
+cmdfeaturenodes = {};
+for i = 1:length(cmdfeaturesnameset)
+    cmdstr = cmdfeaturesnameset{i}{1};
+    nameset = cmdfeaturesnameset{i}{2};
+    nodes = containers.Map();
+%     for j = 1:length(nameset)
+%         nodes(nameset{j}) = {};
+%     end
+    cmdfeaturenodes{end+1} = {cmdstr, nodes};
+end
+
+for i = 1:length(cmdtrialdataset)
+    cmdstr = cmdtrialdataset{i}{1};
+    cmdtrialdata = cmdtrialdataset{i}{2};
+    featurenodes = cmdfeaturenodes{i};
+    nodes = featurenodes{2};
+    for j = 1:length(cmdtrialdata)
+        featureset = cmdtrialdata{j};
+        features = featureset{1};
+        lb = featureset{2};
+        for k = 1:length(features)
+            feature = features{k};
+            name = [feature.nameA '_' feature.nameB];
+            nodesnames = keys(nodes);
+            if lb > 0
+                if isempty(find(strcmp(nodesnames, name) == 1))
+                    nodes(name) = {feature, [0.25 0.25]};
+                else
+                    nodes(name) = gibbs_add(nodes(name), feature);
+                end
+            else
+                if isempty(find(strcmp(nodesnames, name) == 1))
+                    % do nothing
+                else
+                    nodes(name) = gibbs_minus(nodes(name), feature);
+                end 
+            end
+        end
+    end
+    featurenodes{2} = nodes;
+    cmdfeaturenodes{i} = featurenodes;
+end
+
+%view the graphic
+for i = 1:length(cmdfeaturenodes)
+    featurenodes = cmdfeaturenodes{i};
+    cmdstr = featurenodes{1};
+    disp(cmdstr);
+    nodes = featurenodes{2};
+    keyvalues = keys(nodes);
+    disp(keyvalues);
+    for j = 1:length()
+end
+

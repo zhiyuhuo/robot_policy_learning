@@ -1,0 +1,17 @@
+clc;
+clear;
+close all;
+%
+
+featureset = load('features.mat');
+lib = featureset.lib;
+
+vocabulary = load('vocab_cmd_sp.mat');
+cmdset = vocabulary.vocabulary.cmd;
+
+for i = 1:length(cmdset)
+    for j = 1:length(lib)
+        if lib{
+    end
+end
+
